@@ -1,24 +1,117 @@
 ---
-import { Link } from 'accessible-astro-components'
+import Logo from './Logo.astro'
+import { Heading, Link, Notification, Form, Input, Textarea, Button, Modal } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+import themeConfig from '@theme-config'
 
+/**
+ * Footer Component
+ *
+ * @description The site footer with a contact form, site links, social links, and copyright.
+ */
 const currentYear = new Date().getFullYear()
+const socials = themeConfig.socials ?? []
+
+// Formspree endpoint for the union's contact form. The form ID is public by
+// design — it only identifies the inbox submissions are delivered to.
+const formspreeEndpoint = 'https://formspree.io/f/xrbllpoy'
+
+const siteLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Who We Are', href: '/who-we-are' },
+  { label: 'Housing Crisis', href: '/housing-crisis' },
+  { label: 'Tenant Rights', href: '/tenant-rights' },
+  { label: 'Tenant Resources', href: '/tenant-resources' },
+  { label: 'Accessibility statement', href: '/accessibility-statement' },
+]
 ---
 
-<footer>
-  <section class="py-8 space-content">
-    <nav class="container" aria-label="Footer">
-      <ul class="footer-nav">
-        <li><Link href="/" class="plain">Home</Link></li>
-        <li><Link href="/housing-crisis" class="plain">Housing Crisis</Link></li>
-        <li><Link href="/who-we-are" class="plain">Who We Are</Link></li>
-        <li><Link href="/tenant-rights" class="plain">Tenant Rights</Link></li>
-        <li><Link href="/connect" class="plain">Connect With Us</Link></li>
-      </ul>
-    </nav>
+<footer id="contact">
+  <section class="py-20">
+    <Heading level="h2" class="sr-only">Footer</Heading>
+
+    <div class="space-content container mb-16">
+      <Notification>
+        <p>
+          <strong>Note on Digital Accessibility:</strong> This website was designed with digital accessibility in mind, utilizing
+          <Link href="https://astro.build">Astro</Link> and the <Link
+            href="https://github.com/incluud/accessible-astro-starter">Accessible Astro Starter</Link
+          >. To learn more, please read our <Link href="/accessibility-statement">accessibility statement</Link>.
+        </p>
+      </Notification>
+    </div>
+
+    <div class="container grid grid-cols-1 gap-12 lg:grid-cols-2">
+      <div class="space-content">
+        <Heading level="h3" size="h6">Send us a message</Heading>
+        <p>
+          Dealing with a landlord, organizing your building, or looking to pitch in? Send us a message — everything you
+          share stays confidential.
+        </p>
+        <button id="contact-modal-trigger" class="btn" type="button">Contact us</button>
+        <Modal triggerId="contact-modal-trigger" title="Contact us">
+          <Form name="footer-contact" class="w-full" action={formspreeEndpoint} method="post">
+            <input type="hidden" name="_subject" value="New message from flinthillstenantsunited.org" />
+            <input type="hidden" name="_next" value="https://www.flinthillstenantsunited.org/thank-you" />
+            <!-- spam honeypot: bots fill this, humans don't -->
+            <input type="text" name="_gotcha" class="hidden" style="display:none" tabindex="-1" autocomplete="off" />
+
+            <Input id="footer-name" name="name" label="Name" required autocomplete="name" />
+            <Input id="footer-email" name="email" label="Email address" type="email" required autocomplete="email" />
+            <Textarea id="footer-message" name="message" label="Message" required />
+            <Button htmlType="submit" type="primary">Send message</Button>
+          </Form>
+        </Modal>
+      </div>
+
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2">
+        <div class="flex flex-col gap-4">
+          <Heading level="h3" size="h6">Explore</Heading>
+          <ul class="flex flex-col gap-2">
+            {
+              siteLinks.map((link) => (
+                <li>
+                  <Link href={link.href} class="plain">
+                    {link.label}
+                  </Link>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="flex flex-col gap-4">
+          {
+            socials.length > 0 && (
+              <>
+                <Heading level="h3" size="h6">
+                  Connect
+                </Heading>
+                <ul class="flex flex-col gap-2">
+                  {socials.map((social) => (
+                    <li>
+                      <Link isExternal href={social.href} class="plain">
+                        <Icon aria-hidden="true" name={social.icon} size="1.25rem" />
+                        {social.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+          <Logo loading="lazy" />
+          <p class="leading-[1.75]">
+            A tenant-led union of neighbors in Manhattan and the Flint Hills, organizing for safe, affordable, and
+            dignified housing.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-8">
     <div class="container flex flex-col gap-4 md:flex-row md:justify-between">
-      <p>
-        &copy; {currentYear} Flint Hills Tenants United. Solidarity, not charity.
-      </p>
+      <p>&copy; {currentYear} Flint Hills Tenants United. Solidarity, not charity.</p>
       <p>
         Built with <Link href="https://astro.build/">Astro</Link> and the <Link
           href="https://accessible-astro.incluud.dev/">Accessible Astro</Link
@@ -28,8 +121,28 @@ const currentYear = new Date().getFullYear()
   </section>
 </footer>
 
-<style>
-  footer section {
+<script>
+  // Any button on the page marked `data-open-contact` opens the footer's
+  // contact modal, so pages can offer a CTA without repeating the form.
+  document.addEventListener('astro:page-load', () => {
+    const trigger = document.getElementById('contact-modal-trigger')
+    if (!trigger) return
+
+    document.querySelectorAll('[data-open-contact]').forEach((button) => {
+      button.addEventListener('click', () => trigger.click())
+    })
+  })
+</script>
+
+<style lang="scss">
+  section {
     border-top: 1px solid var(--border-color-subtle);
+  }
+
+  // Social links sit alongside their icon.
+  ul :global(a) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
   }
 </style>

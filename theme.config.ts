@@ -19,9 +19,41 @@ export default defineThemeConfig({
     outline: '#33596f',
   },
   navigation: {
-    // Single-page design with no navigation bar (see Header.astro)
     darkmode: false,
-    items: [],
+    items: [
+      { type: 'link', label: 'Home', href: '/' },
+      {
+        type: 'dropdown',
+        label: 'About',
+        items: [
+          { label: 'Who We Are', href: '/who-we-are' },
+          { label: 'Housing Crisis', href: '/housing-crisis' },
+        ],
+      },
+      {
+        type: 'dropdown',
+        label: 'Tenants',
+        items: [
+          { label: 'Tenant Rights', href: '/tenant-rights' },
+          { label: 'Tenant Resources', href: '/tenant-resources' },
+        ],
+      },
+      // Jumps to the contact form in the footer of whatever page you're on.
+      { type: 'link', label: 'Contact', href: '#contact' },
+    ],
   },
-  socials: [],
+  socials: [
+    {
+      label: 'Instagram',
+      href: 'https://www.instagram.com/flinthillstenantsunited',
+      icon: 'lucide:instagram',
+      external: true,
+    },
+    {
+      label: 'Facebook',
+      href: 'https://www.facebook.com/FlintHillsTenantsUnited/',
+      icon: 'lucide:facebook',
+      external: true,
+    },
+  ],
 })

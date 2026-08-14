@@ -1,0 +1,36 @@
+---
+import PageLayout from '@layouts/PageLayout.astro'
+import { Heading, Notification } from 'accessible-astro-components'
+import { Icon } from 'astro-icon/components'
+---
+
+<PageLayout
+  title="Thank you"
+  description="Your message was received. An organizer with Flint Hills Tenants United will follow up with you."
+  crumbs={[{ label: 'Home', href: '/' }, { label: 'Thank you' }]}
+>
+  <section class="page-hero section--flow center-text" data-reveal>
+    <div class="narrow space-content container">
+      <p class="eyebrow">
+        <Icon name="lucide:mail-check" aria-hidden="true" />
+        Message sent
+      </p>
+      <Heading level="h1" class="page-title text-balance">Thank you for reaching out.</Heading>
+      <p class="lead text-balance">
+        We got your message. An organizer will follow up with you, usually within a couple of days. Everything you
+        shared stays confidential.
+      </p>
+      <Notification>
+        <Icon aria-hidden="true" name="lucide:info" size={24} />
+        <p>
+          If your situation is urgent — an eviction notice, a shutoff, or an unsafe unit — say so in a follow-up message
+          and we will prioritize it.
+        </p>
+      </Notification>
+      <div class="btn-group btn-group--center">
+        <a href="/" class="btn">Back home</a>
+        <a href="/tenant-rights" class="btn btn--ghost">Know your rights</a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

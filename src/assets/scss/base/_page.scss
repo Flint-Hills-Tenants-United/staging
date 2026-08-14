@@ -10,8 +10,11 @@
 // ---------------------------------------------------------------------------
 
 // Sections snap to center as you scroll, so only one is visible at a time.
+// `--header-height` is measured by Header.astro so jumps to an in-page anchor
+// stop below the pinned navigation bar instead of underneath it.
 html {
   scroll-snap-type: y proximity;
+  scroll-padding-block-start: var(--header-height, 0px);
 }
 
 // Each section fills at least a full screen and centers its content, so when
@@ -274,26 +277,11 @@ html {
   margin-inline: auto;
 }
 
-// Inline contact email / phone line
-.contact-email {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  font-size: var(--font-size-1);
-  font-weight: 700;
-
-  svg {
-    inline-size: 1.4rem;
-    block-size: 1.4rem;
-    color: var(--color-neutral-100);
-  }
-}
-
-// Breadcrumbs: slim trail pinned to the top of standalone pages, so it stays
-// visible even as full-height sections snap past underneath it.
+// Breadcrumbs: slim trail pinned just below the navigation bar on standalone
+// pages, so it stays visible even as full-height sections snap past underneath.
 .breadcrumbs {
   position: sticky;
-  top: 0;
+  top: var(--header-height, 0px);
   z-index: 5;
   background-color: var(--background-color);
   padding-block: var(--space-s);

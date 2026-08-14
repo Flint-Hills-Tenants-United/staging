@@ -1,7 +1,49 @@
 ---
 import { SkipLink } from 'accessible-astro-components'
+import Navigation from './Navigation.astro'
 ---
 
 <header>
   <SkipLink />
+  <Navigation />
 </header>
+
+<script>
+  // Pages are built from full-height snap sections, so the header stays pinned
+  // to the top. Publish its height as --header-height so anchor targets and the
+  // sticky breadcrumb trail can clear it.
+  const setHeaderHeight = () => {
+    const header = document.querySelector('body > header') as HTMLElement | null
+    if (!header) return
+
+    // While the mobile menu is expanded the header fills most of the screen;
+    // keep the collapsed bar height, since that's what content has to clear.
+    if (header.querySelector('.mobile-menu.show')) return
+
+    document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`)
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    setHeaderHeight()
+
+    const header = document.querySelector('body > header')
+    if (!header) return
+
+    // Re-measure when the bar wraps or the mobile menu opens. Keep a single
+    // observer on the window so view transitions don't stack up new ones.
+    const scope = window as typeof window & { headerObserver?: ResizeObserver }
+    scope.headerObserver?.disconnect()
+    scope.headerObserver = new ResizeObserver(setHeaderHeight)
+    scope.headerObserver.observe(header)
+  })
+</script>
+
+<style lang="scss">
+  header {
+    position: sticky;
+    z-index: 10;
+    inset-block-start: 0;
+    border-block-end: 1px solid var(--border-color-subtle);
+    background-color: var(--background-color);
+  }
+</style>
