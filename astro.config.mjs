@@ -35,7 +35,12 @@ const viteConfig = {
 
 export default defineConfig({
   compressHTML: true,
-  site: 'https://example.com',
+  site: 'https://www.flinthillstenantsunited.org',
+  // /connect was retired in favor of the contact form in the footer; keep any
+  // links already out in the world working.
+  redirects: {
+    '/connect': '/#contact',
+  },
   // astro-compress's CSS minifier strips width-based @media queries (breaking
   // responsive grids); Astro already minifies CSS, so disable its CSS pass.
   integrations: [compress({ CSS: false }), icon(), sitemap()],
