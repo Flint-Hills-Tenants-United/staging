@@ -50,8 +50,8 @@ html {
   scroll-snap-stop: normal;
 }
 
-// The intro on a standalone page sits just below the breadcrumb trail. Don't
-// snap it to center, or the breadcrumbs get scrolled out of view on load.
+// The intro on a standalone page sits just below the pinned header. Don't snap
+// it to center, or the page jumps away from the top on load.
 .page-hero {
   scroll-snap-align: none;
   scroll-snap-stop: normal;
@@ -277,14 +277,13 @@ html {
   margin-inline: auto;
 }
 
-// Breadcrumbs: slim trail pinned just below the navigation bar on standalone
-// pages, so it stays visible even as full-height sections snap past underneath.
+// Breadcrumbs: a slim second row of the pinned header on standalone pages, so
+// the trail stays visible as full-height sections snap past underneath. It
+// rides along with the header rather than sticking on its own — two separate
+// sticky strips let content flash through the seam between them.
 .breadcrumbs {
-  position: sticky;
-  top: var(--header-height, 0px);
-  z-index: 5;
-  background-color: var(--background-color);
-  padding-block: var(--space-s);
+  border-block-start: 1px solid var(--border-color-subtle);
+  padding-block: var(--space-2xs);
 
   ol {
     display: flex;

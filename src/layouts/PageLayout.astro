@@ -1,13 +1,12 @@
 ---
 import DefaultLayout from '@layouts/DefaultLayout.astro'
-import Breadcrumbs from '@components/Breadcrumbs.astro'
 
 /**
  * Layout for standalone content pages (housing-crisis, who-we-are, etc.).
  * Provides the same full-height snap sections + scroll-reveal behaviour as the
- * homepage, plus an optional breadcrumb trail. Drop `.section` blocks into the
- * default slot; end the page with a `.section.section--flow` so the footer is
- * reachable.
+ * homepage, plus an optional breadcrumb trail (rendered in the pinned header).
+ * Drop `.section` blocks into the default slot; end the page with a
+ * `.section.section--flow` so the footer is reachable.
  */
 interface Crumb {
   label: string
@@ -23,13 +22,11 @@ interface Props {
 const { title, description, crumbs } = Astro.props
 ---
 
-<DefaultLayout title={title} description={description}>
+<DefaultLayout title={title} description={description} crumbs={crumbs}>
   <!-- Enable reveal-on-scroll only when JS is available (no-JS shows all content) -->
   <script is:inline>
     document.documentElement.classList.add('js-reveal')
   </script>
-
-  {crumbs && crumbs.length > 0 && <Breadcrumbs crumbs={crumbs} />}
 
   <slot />
 </DefaultLayout>

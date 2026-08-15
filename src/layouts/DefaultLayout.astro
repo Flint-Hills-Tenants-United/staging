@@ -38,6 +38,10 @@ interface Props {
    * Set to false to use the title as-is without appending site name
    */
   useTitleTemplate?: boolean
+  /**
+   * Breadcrumb trail, rendered inside the pinned header
+   */
+  crumbs?: { label: string; href?: string }[]
 }
 
 const {
@@ -48,6 +52,7 @@ const {
   author = themeConfig.seo.author ?? '',
   type = 'website',
   useTitleTemplate = true,
+  crumbs,
 } = Astro.props
 
 // For social sharing, we need the full absolute URL
@@ -119,7 +124,7 @@ const imageUrl = new URL(imagePath, Astro.site).href
     <ClientRouter />
   </head>
   <body>
-    <Header />
+    <Header crumbs={crumbs} />
     <main id="main-content" transition:animate="fade">
       <slot />
     </main>
